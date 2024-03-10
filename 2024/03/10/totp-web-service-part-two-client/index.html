@@ -14,19 +14,28 @@
   
 
   
-  <title>Archives: 2024 | Dev Experience</title>
+  <title>Building Authentication Service with TOTP (Time-Based OTP) Part 2. The Client | Dev Experience</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <link rel="preload" href="/css/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="preload" href="/css/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Dev Experience">
-<meta property="og:url" content="http://example.com/archives/2024/index.html">
+  <meta name="description" content="If you haven’t read the first part, I highlight recommended to check it first.  Series Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server Building Authentication Service wi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building Authentication Service with TOTP (Time-Based OTP) Part 2. The Client">
+<meta property="og:url" content="http://example.com/2024/03/10/totp-web-service-part-two-client/index.html">
 <meta property="og:site_name" content="Dev Experience">
+<meta property="og:description" content="If you haven’t read the first part, I highlight recommended to check it first.  Series Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server Building Authentication Service wi">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://lh3.googleusercontent.com/iCC9WEcAOxIpS_bDztwlctYfNNVW0CfyZkreEV19h0dUtlIzBSXFx9KO5rHBsNn5RJdhsYyrCFUp8skpLZUZrsJRZQ=s1280-w1280-h800">
+<meta property="og:image" content="http://example.com/images/totp/totp-web-qr.png">
+<meta property="og:image" content="http://example.com/images/totp/authenticator.jpg">
+<meta property="og:image" content="http://example.com/images/totp/login-result.jpg">
+<meta property="article:published_time" content="2024-03-10T13:42:56.000Z">
+<meta property="article:modified_time" content="2024-03-10T14:36:36.995Z">
 <meta property="article:author" content="Achmad Naufal Syafiq">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://lh3.googleusercontent.com/iCC9WEcAOxIpS_bDztwlctYfNNVW0CfyZkreEV19h0dUtlIzBSXFx9KO5rHBsNn5RJdhsYyrCFUp8skpLZUZrsJRZQ=s1280-w1280-h800">
   
     <link rel="alternate" href="/atom.xml" title="Dev Experience" type="application/atom+xml">
   
@@ -150,101 +159,136 @@
     <div id="content-body">
        
 
-<div class="archive-main-card">
-    <div class="archive-top">
-      <div class="main-title-bar">
-        <div class="main-title-dot"></div>
-        <h1 class="article-title">Archives</h1>
-      </div>    
+
+<article id="post-totp-web-service-part-two-client" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+    
+   
+  <div class="article-inner">
+    <div class="article-main">
+      <header class="article-header">
+        
+<div class="main-title-bar">
+  <div class="main-title-dot"></div>
+  
+    
+      <h1 class="p-name article-title" itemprop="headline name">
+        Building Authentication Service with TOTP (Time-Based OTP) Part 2. The Client
+      </h1>
+    
+  
+</div>
+
+        <div class='meta-info-bar'>
+          <div class="meta-info">
+  <time class="dt-published" datetime="2024-03-10T13:42:56.000Z" itemprop="datePublished">2024-03-10</time>
+</div>
+          <div class="need-seperator meta-info">
+            <div class="meta-cate-flex">
+  
+    Uncategorized 
+   
+</div>
+  
+          </div>
+          <div class="wordcount need-seperator meta-info">
+            2.1k words 
+          </div>
+        </div>
+        
+      </header>
+      <div class="e-content article-entry" itemprop="articleBody">
+        
+          <blockquote>
+<p>If you haven’t read the first part, I highlight recommended to <a target="_blank" rel="noopener" href="https://www.naufals.com/2024/03/09/totp-web-service-part-one/">check</a> it first.</p>
+</blockquote>
+<h3 id="Series"><a href="#Series" class="headerlink" title="Series"></a>Series</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.naufals.com/2024/03/09/totp-web-service-part-one/">Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.naufals.com/2024/03/10/totp-web-service-part-two-client/">Building Authentication Service with TOTP (Time-Based OTP) Part 2. The Client</a></li>
+</ul>
+<h3 id="Optional-Requirement"><a href="#Optional-Requirement" class="headerlink" title="Optional Requirement"></a>Optional Requirement</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.npmjs.com/package/http-server">http server</a></li>
+</ul>
+<h3 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h3><p>In this part two of the series we are going to build a client using <code>html</code> and <code>javascript (jQuery)</code>. The finished product will be 2 pages one for login and the other is for registering.</p>
+<p>In register page, when the user successfully registered the page will show a QR code that will later be used to generate TOTP Token.</p>
+<p>When the user wants to login, they will have to provide a TOTP Token that’s generated through third party application such as <a target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&gl=US">Google Authenticator</a> or using a browser plugin such as <a target="_blank" rel="noopener" href="https://chromewebstore.google.com/detail/authenticator/bhghoamapcdpbohphigoooaddinpkbai?pli=1">this</a>.</p>
+<p><img src="https://lh3.googleusercontent.com/iCC9WEcAOxIpS_bDztwlctYfNNVW0CfyZkreEV19h0dUtlIzBSXFx9KO5rHBsNn5RJdhsYyrCFUp8skpLZUZrsJRZQ=s1280-w1280-h800" alt="authenticator example"></p>
+<center>Example of authenticator for chrome plugin</center>
+
+<h3 id="The-Client"><a href="#The-Client" class="headerlink" title="The Client"></a>The Client</h3><p>Our project structure will look like this</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">├── index.html</span><br><span class="line">├── index.js</span><br><span class="line">├── qrcode.js</span><br><span class="line">├── register.html</span><br><span class="line">├── register.js</span><br><span class="line">└── style.css</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>index.html</code> will be login page</li>
+<li><code>index.js</code> will contain script for login</li>
+<li><code>qrcode.js</code> is a <a target="_blank" rel="noopener" href="https://davidshimjs.github.io/qrcodejs/">library</a> to generate qr code.</li>
+<li><code>register.html</code> will contain register page and showing the qr for authenticator</li>
+</ul>
+<p>The most important part is in <code>register.js</code>, after a user successfully registered, the page will show a qr code with URL that comply with authenticator <a target="_blank" rel="noopener" href="https://github.com/google/google-authenticator/wiki/Key-Uri-Format">stardard</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">otpauth://TYPE/LABEL?PARAMETERS</span><br></pre></td></tr></table></figure>
+
+<p>example</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">otpauth://totp/UserName1:test@google.com?secret=JBSWY3DPEHPK3PXP&amp;issuer=MyCompany</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//register.js</span></span><br><span class="line"> <span class="keyword">function</span> <span class="title function_">showQr</span>(<span class="params">response</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> username = response.<span class="property">username</span>;</span><br><span class="line">        <span class="keyword">const</span> secretKey = response.<span class="property">secretKey</span>;</span><br><span class="line">        <span class="keyword">const</span> totpUrl = <span class="string">`otpauth://totp/Example:<span class="subst">$&#123;username&#125;</span>?secret=<span class="subst">$&#123;secretKey&#125;</span>&amp;issuer=Example`</span>;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">QRCode</span>(<span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;qrCode&quot;</span>), totpUrl);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/nooballday/microanut-totp-service/tree/master/client">You can see the full code here</a></p>
+<p>You can run both applications by running these commands</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># starting the server - port :8081</span></span><br><span class="line">./gradlew run</span><br><span class="line"></span><br><span class="line"><span class="comment">#starting the client - port :8080</span></span><br><span class="line">http-server .</span><br></pre></td></tr></table></figure>
+
+<p>Try registering in <code>localhost:8080/register.html</code></p>
+<p>you will get a QR code</p>
+<p><img src="/images/totp/totp-web-qr.png" alt="qr code after register"></p>
+<p>and use your authenticator of choice, I am using <a target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=com.authenticator.app.starnest&hl=en&gl=US">Authenticator App</a></p>
+<p><img src="/images/totp/authenticator.jpg" alt="authenticator app"></p>
+<p>Now when you login you can input the code that you get from the authenticator.</p>
+<p><img src="/images/totp/login-result.jpg" alt="login-result"></p>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>TOTP only provides one extra layer to your authentication, it’s still best to keep in mind other aspect of security.</p>
+<p>The benefit of using TOTP is relatively easy to setup and its widely used by large system such as github.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/nooballday/microanut-totp-service/tree/master/client">Full code</a></p>
+
+        
+      </div>
+
+         
     </div>
     
-    
-      
-      
-        
-        <div class="year-line">
-            <div class="year-num">2024</div>
-            <div class="dot-wrapper">
-                <div class="dot"></div>
-            </div>
-            <div class="article-count">4 articles</div>
-        </div>
-      
-      <a class="archive-article-link" href="/2024/03/10/totp-web-service-part-two-client/" title="Building Authentication Service with TOTP (Time-Based OTP) Part 2. The Client">
-        <div class="date">03-10</div>
-        <div class="line">
-            <div class="dot"></div>
-        </div>
-        <div class="title">
-            <div class="title-inner">
-                
-                    Building Authentication Service with TOTP (Time-Based OTP) Part 2. The Client
-                
-            </div>
-        </div>
-        <div class="tags">
-            
-        </div>
-      </a>
-    
-      
-      
-      <a class="archive-article-link" href="/2024/03/09/totp-web-service-part-one/" title="Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server">
-        <div class="date">03-09</div>
-        <div class="line">
-            <div class="dot"></div>
-        </div>
-        <div class="title">
-            <div class="title-inner">
-                
-                    Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server
-                
-            </div>
-        </div>
-        <div class="tags">
-            #totp #java #micronaut
-        </div>
-      </a>
-    
-      
-      
-      <a class="archive-article-link" href="/2024/03/07/managing-express-context/" title="Managing Context in Express Application">
-        <div class="date">03-07</div>
-        <div class="line">
-            <div class="dot"></div>
-        </div>
-        <div class="title">
-            <div class="title-inner">
-                
-                    Managing Context in Express Application
-                
-            </div>
-        </div>
-        <div class="tags">
-            #nodejs #context
-        </div>
-      </a>
-    
-      
-      
-      <a class="archive-article-link" href="/2024/03/06/Mqqt-with-RUST-and-NodeJs/" title="MQTT with RUST and NodeJs">
-        <div class="date">03-06</div>
-        <div class="line">
-            <div class="dot"></div>
-        </div>
-        <div class="title">
-            <div class="title-inner">
-                
-                    MQTT with RUST and NodeJs
-                
-            </div>
-        </div>
-        <div class="tags">
-            #rust #nodejs #mqtt
-        </div>
-      </a>
-    
+     
   </div>
+  
+    
+<nav id="article-nav">
+  <a class="article-nav-btn left  disabled "
+     >
+    <i class="fa-solid fa-angle-left"></i>
+    <p class="title-text">
+        
+    </p>
+  </a>
+  <a class="article-nav-btn right "
+    
+      href="/2024/03/09/totp-web-service-part-one/"
+      title="Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server"
+     >
+
+    <p class="title-text">
+      
+        Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server
+        
+    </p>
+    <i class="fa-solid fa-angle-right"></i>
+  </a>
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
     </div>
     <div id="footer-wrapper">
       <footer id="footer">
