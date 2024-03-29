@@ -20,15 +20,15 @@
   <link rel="preload" href="/css/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
   <link rel="preload" href="/css/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
 
-  <meta name="description" content="Pre-requisite NodeJs  Why ?When creating a Web API, there is a need to manage a client’s context so when it’s required in a function, the function get the correct context and process the data. In orde">
+  <meta name="description" content="Pre-requisite NodeJs  Why?When creating a Web API, there is a need to manage a client’s context so that when it’s required in a function, the function gets the correct context and processes the data.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Managing Context in Express Application">
 <meta property="og:url" content="http://example.com/2024/03/07/managing-express-context/index.html">
 <meta property="og:site_name" content="Dev Experience">
-<meta property="og:description" content="Pre-requisite NodeJs  Why ?When creating a Web API, there is a need to manage a client’s context so when it’s required in a function, the function get the correct context and process the data. In orde">
+<meta property="og:description" content="Pre-requisite NodeJs  Why?When creating a Web API, there is a need to manage a client’s context so that when it’s required in a function, the function gets the correct context and processes the data.">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-03-07T06:48:38.000Z">
-<meta property="article:modified_time" content="2024-03-07T08:06:09.411Z">
+<meta property="article:modified_time" content="2024-03-29T00:01:17.495Z">
 <meta property="article:author" content="Achmad Naufal Syafiq">
 <meta property="article:tag" content="nodejs">
 <meta property="article:tag" content="context">
@@ -189,7 +189,7 @@
   
           </div>
           <div class="wordcount need-seperator meta-info">
-            3k words 
+            2.9k words 
           </div>
         </div>
         
@@ -201,14 +201,16 @@
           <h3 id="Pre-requisite"><a href="#Pre-requisite" class="headerlink" title="Pre-requisite"></a>Pre-requisite</h3><ul>
 <li>NodeJs</li>
 </ul>
-<h3 id="Why"><a href="#Why" class="headerlink" title="Why ?"></a>Why ?</h3><p>When creating a Web API, there is a need to manage a client’s context so when it’s required in a function, the function get the correct context and process the data.</p>
-<p>In order to achieve that, we often passing paramaters to each functions.</p>
+<h3 id="Why"><a href="#Why" class="headerlink" title="Why?"></a>Why?</h3><p>When creating a Web API, there is a need to manage a client’s context so that when it’s required in a function, the function gets the correct context and processes the data.</p>
+<p>To achieve that, we often pass parameters to each function.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//illustration</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> (<span class="params">req, res</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> user = req.<span class="property">user</span></span><br><span class="line">    <span class="title function_">validateuser</span>(user);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">validateUser</span>(<span class="params">user</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getProducts</span>(<span class="params">user</span>) &#123;</span><br><span class="line">    <span class="title function_">updateUserLastVisit</span>(user);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">updateUserLastVisit</span>(<span class="params">user</span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
 
-<p>disclaimer: of course it’s a very simple example</p>
-<p>Notice that <code>getProducts(user)</code> doesn’t really need user but since <code>updateUserLastVisit(user)</code> requires user data the function needed it.</p>
+<blockquote>
+<p>Of course, it’s a very simple example.</p>
+</blockquote>
+<p>Notice that <code>getProducts(user)</code> doesn’t need a user but since <code>updateUserLastVisit(user)</code> requires user data the function needed it.</p>
 <p>What if we can store the user context and just get it when we need it down the function call?</p>
-<p>enter <a target="_blank" rel="noopener" href="https://github.com/othiym23/node-continuation-local-storage#readme">continuation local storage</a>. In simple term, it allows us to store data for each request and delete it automatically when the chain call is finished.</p>
+<p>enter <a target="_blank" rel="noopener" href="https://github.com/othiym23/node-continuation-local-storage#readme">continuation local storage</a>. In simple terms, it allows us to store data for each request and delete it automatically when the chain call is finished.</p>
 <p>Let’s start by creating a blank NodeJs project</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yarn init -y</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">npm init -y</span><br></pre></td></tr></table></figure>
 
@@ -220,8 +222,8 @@
 <p>Try running it with</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node src/index.js</span><br><span class="line"></span><br><span class="line"><span class="comment">#then call the API</span></span><br><span class="line">curl http://localhost:3000</span><br></pre></td></tr></table></figure>
 
-<p>Obviously there is going to be tradeoffs, one of which is testing, now you need to mock&#x2F;stub the namespace call if you are running unit test.</p>
-<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>When you are building complex application, you need to make a trade off on how to manage your code, if you pass every variable that’s needed down in the function call even though your function might not actually need it your code will be harder to read, on the other hand if you use context based session like the on we did above, your will need extra effort on the test.</p>
+<p>There are going to be tradeoffs, one of which is testing, now you need to mock&#x2F;stub the namespace call if you are running a unit test.</p>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>When you are building a complex application, you need to make a trade-off on how to manage your code, if you pass every variable that’s needed down in the function call even though your function might not need it your code will be harder to read, on the other hand, if you use context-based session like the one we did above, you will need extra effort on the test.</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/nooballday/express-context-storage">View code on github</a></p>
 
         
