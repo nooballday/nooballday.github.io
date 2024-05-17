@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+
+<html theme="dark" showBanner="true" hasBanner="false" > 
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet">
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet">
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet">
+<script src="/js/color.global.min.js" ></script>
+<script src="/js/load-settings.js" ></script>
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+
+  
+  <title>Realtime Data with MariaDB and Websocket [Part 2] | Dev Experience</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="preload" href="/css/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+  <link rel="preload" href="/css/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+  <meta name="description" content="IntroThis is part 2 of the “Realtime Data with Mariadb” Series, if you haven’t got the chance to read part 1 I highly recommend to read it first. WebsocketNow that we’ve successfully listened to datab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Realtime Data with MariaDB and Websocket [Part 2]">
+<meta property="og:url" content="http://example.com/2024/05/17/realtime-data-with-mariadb-2/index.html">
+<meta property="og:site_name" content="Dev Experience">
+<meta property="og:description" content="IntroThis is part 2 of the “Realtime Data with Mariadb” Series, if you haven’t got the chance to read part 1 I highly recommend to read it first. WebsocketNow that we’ve successfully listened to datab">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/example-realtime.gif">
+<meta property="article:published_time" content="2024-05-17T06:59:50.000Z">
+<meta property="article:modified_time" content="2024-05-17T08:16:27.158Z">
+<meta property="article:author" content="Achmad Naufal Syafiq">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="micronaut">
+<meta property="article:tag" content="mariadb">
+<meta property="article:tag" content="websocket">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/example-realtime.gif">
+  
+    <link rel="alternate" href="/atom.xml" title="Dev Experience" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/images/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+<body>
+  
+   
+  <div id="main-grid" class="  ">
+    <div id="nav" class=""  >
+      <navbar id="navbar">
+  <nav id="title-nav">
+    <a href="/">
+      <div id="vivia-logo">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div>Dev Experience </div>
+    </a>
+  </nav>
+  <nav id="main-nav">
+    
+      <a class="main-nav-link" href="/">Home</a>
+    
+      <a class="main-nav-link" href="/archives">Archives</a>
+    
+  </nav>
+  <nav id="sub-nav">
+    <a id="theme-btn" class="nav-icon">
+      <span class="light-mode-icon"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M438.5-829.913v-48q0-17.452 11.963-29.476 11.964-12.024 29.326-12.024 17.363 0 29.537 12.024t12.174 29.476v48q0 17.452-11.963 29.476-11.964 12.024-29.326 12.024-17.363 0-29.537-12.024T438.5-829.913Zm0 747.826v-48q0-17.452 11.963-29.476 11.964-12.024 29.326-12.024 17.363 0 29.537 12.024t12.174 29.476v48q0 17.452-11.963 29.476-11.964 12.024-29.326 12.024-17.363 0-29.537-12.024T438.5-82.087ZM877.913-438.5h-48q-17.452 0-29.476-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537t29.476-12.174h48q17.452 0 29.476 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T877.913-438.5Zm-747.826 0h-48q-17.452 0-29.476-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537T82.087-521.5h48q17.452 0 29.476 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T130.087-438.5Zm660.174-290.87-34.239 32q-12.913 12.674-29.565 12.174-16.653-.5-29.327-13.174-12.674-12.673-12.554-28.826.12-16.152 12.794-28.826l33-35q12.913-12.674 30.454-12.674t30.163 12.847q12.709 12.846 12.328 30.826-.38 17.98-13.054 30.653ZM262.63-203.978l-32 34q-12.913 12.674-30.454 12.674t-30.163-12.847q-12.709-12.846-12.328-30.826.38-17.98 13.054-30.653l33.239-31q12.913-12.674 29.565-12.174 16.653.5 29.327 13.174 12.674 12.673 12.554 28.826-.12 16.152-12.794 28.826Zm466.74 33.239-32-33.239q-12.674-12.913-12.174-29.565.5-16.653 13.174-29.327 12.673-12.674 28.826-13.054 16.152-.38 28.826 12.294l35 33q12.674 12.913 12.674 30.454t-12.847 30.163q-12.846 12.709-30.826 12.328-17.98-.38-30.653-13.054ZM203.978-697.37l-34-33q-12.674-12.913-13.174-29.945-.5-17.033 12.174-29.707t31.326-13.293q18.653-.62 31.326 13.054l32 34.239q11.674 12.913 11.174 29.565-.5 16.653-13.174 29.327-12.673 12.674-28.826 12.554-16.152-.12-28.826-12.794ZM480-240q-100 0-170-70t-70-170q0-100 70-170t170-70q100 0 170 70t70 170q0 100-70 170t-170 70Zm-.247-82q65.703 0 111.475-46.272Q637-414.544 637-480.247t-45.525-111.228Q545.95-637 480.247-637t-111.475 45.525Q323-545.95 323-480.247t45.525 111.975Q414.05-322 479.753-322ZM481-481Z"/></svg></span>
+      <span class="dark-mode-icon"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480.239-116.413q-152.63 0-258.228-105.478Q116.413-327.37 116.413-480q0-130.935 77.739-227.435t206.304-125.043q43.022-9.631 63.87 10.869t3.478 62.805q-8.891 22.043-14.315 44.463-5.424 22.42-5.424 46.689 0 91.694 64.326 155.879 64.325 64.186 156.218 64.186 24.369 0 46.978-4.946 22.609-4.945 44.413-14.076 42.826-17.369 62.967 1.142 20.142 18.511 10.511 61.054Q807.174-280 712.63-198.206q-94.543 81.793-232.391 81.793Zm0-95q79.783 0 143.337-40.217 63.554-40.218 95.793-108.283-15.608 4.044-31.097 5.326-15.49 1.283-31.859.805-123.706-4.066-210.777-90.539-87.071-86.473-91.614-212.092-.24-16.369.923-31.978 1.164-15.609 5.446-30.978-67.826 32.478-108.282 96.152Q211.652-559.543 211.652-480q0 111.929 78.329 190.258 78.329 78.329 190.258 78.329ZM466.13-465.891Z"/></svg></span>
+    </a>
+    
+      <a id="nav-rss-link" class="nav-icon mobile-hide" href="/atom.xml" title="RSS Feed">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M198-120q-25.846 0-44.23-18.384-18.384-18.385-18.384-44.23 0-25.846 18.384-44.23 18.384-18.385 44.23-18.385 25.846 0 44.23 18.385 18.384 18.384 18.384 44.23 0 25.845-18.384 44.23Q223.846-120 198-120Zm538.385 0q-18.846 0-32.923-13.769-14.076-13.769-15.922-33.23-8.692-100.616-51.077-188.654-42.385-88.039-109.885-155.539-67.5-67.501-155.539-109.885Q283-663.462 182.385-672.154q-19.461-1.846-33.23-16.23-13.769-14.385-13.769-33.846t14.076-32.922q14.077-13.461 32.923-12.23 120.076 8.692 226.038 58.768 105.961 50.077 185.73 129.846 79.769 79.769 129.846 185.731 50.077 105.961 58.769 226.038 1.231 18.846-12.538 32.922Q756.461-120 736.385-120Zm-252 0q-18.231 0-32.423-13.461t-18.653-33.538Q418.155-264.23 348.886-333.5q-69.27-69.27-166.501-84.423-20.077-4.462-33.538-18.961-13.461-14.5-13.461-33.346 0-19.076 13.884-33.23 13.884-14.153 33.115-10.922 136.769 15.384 234.384 112.999 97.615 97.615 112.999 234.384 3.231 19.23-10.538 33.115Q505.461-120 484.385-120Z"/></svg>
+      </a>
+    
+    <div id="nav-menu-btn" class="nav-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M177.37-252.282q-17.453 0-29.477-11.964-12.024-11.963-12.024-29.326t12.024-29.537q12.024-12.174 29.477-12.174h605.26q17.453 0 29.477 11.964 12.024 11.963 12.024 29.326t-12.024 29.537q-12.024 12.174-29.477 12.174H177.37Zm0-186.218q-17.453 0-29.477-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537T177.37-521.5h605.26q17.453 0 29.477 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T782.63-438.5H177.37Zm0-186.217q-17.453 0-29.477-11.964-12.024-11.963-12.024-29.326t12.024-29.537q12.024-12.174 29.477-12.174h605.26q17.453 0 29.477 11.964 12.024 11.963 12.024 29.326t-12.024 29.537q-12.024 12.174-29.477 12.174H177.37Z"/></svg>
+    </div>
+  </nav>
+</navbar>
+<div id="nav-dropdown" class="hidden">
+  <div id="dropdown-link-list">
+    
+      <a class="nav-dropdown-link" href="/">Home</a>
+    
+      <a class="nav-dropdown-link" href="/archives">Archives</a>
+    
+    
+      <a class="nav-dropdown-link" href="/atom.xml" title="RSS Feed">RSS</a>
+     
+    </div>
+</div>
+<script>
+  let dropdownBtn = document.getElementById("nav-menu-btn");
+  let dropdownEle = document.getElementById("nav-dropdown");
+  dropdownBtn.onclick = function() {
+    dropdownEle.classList.toggle("hidden");
+  }
+</script>
+    </div>
+    <div id="sidebar-wrapper">
+      <sidebar id="sidebar">
+  
+    <div class="widget-wrap">
+  <div class="info-card">
+    <div class="avatar">
+      
+      <div class="img-dim"></div>
+    </div>
+    <div class="info">
+      <div class="username">Achmad Naufal </div>
+      <div class="dot"></div>
+      <div class="subtitle">Find me here </div>
+      <div class="link-list">
+        
+          <a class="link-btn" target="_blank" rel="noopener" href="https://www.linkedin.com/in/naufal3dev/" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+        
+          <a class="link-btn" target="_blank" rel="noopener" href="https://steamcommunity.com/profiles/76561199242373857/" title="Steam"><i class="fa-brands fa-steam"></i></a>
+        
+          <a class="link-btn" target="_blank" rel="noopener" href="https://github.com/nooballday" title="GitHub"><i class="fa-brands fa-github"></i></a>
+        
+          <a class="link-btn" href="mailto:naufal3dev@gmail.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+         
+      </div>  
+    </div>
+  </div>
+</div>
+
+  
+  <div class="sticky">
+    
+      
+
+
+
+    
+      
+  <div class="widget-wrap">
+    <div class="widget">
+      <h3 class="widget-title">Tags</h3>
+      <ul class="widget-tag-list" itemprop="keywords"><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/authenticator/" rel="tag">authenticator</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/context/" rel="tag">context</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/database/" rel="tag">database</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/html/" rel="tag">html</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/idempotency/" rel="tag">idempotency</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/mariadb/" rel="tag">mariadb</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/micronaut/" rel="tag">micronaut</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/mqtt/" rel="tag">mqtt</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/nodejs/" rel="tag">nodejs</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/realtime/" rel="tag">realtime</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/rust/" rel="tag">rust</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/totp/" rel="tag">totp</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/websocket/" rel="tag">websocket</a></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</sidebar>
+    </div>
+    <div id="content-body">
+       
+
+
+<article id="post-realtime-data-with-mariadb-2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+    
+   
+  <div class="article-inner">
+    <div class="article-main">
+      <header class="article-header">
+        
+<div class="main-title-bar">
+  <div class="main-title-dot"></div>
+  
+    
+      <h1 class="p-name article-title" itemprop="headline name">
+        Realtime Data with MariaDB and Websocket [Part 2]
+      </h1>
+    
+  
+</div>
+
+        <div class='meta-info-bar'>
+          <div class="meta-info">
+  <time class="dt-published" datetime="2024-05-17T06:59:50.000Z" itemprop="datePublished">2024-05-17</time>
+</div>
+          <div class="need-seperator meta-info">
+            <div class="meta-cate-flex">
+  
+    Uncategorized 
+   
+</div>
+  
+          </div>
+          <div class="wordcount need-seperator meta-info">
+            9.8k words 
+          </div>
+        </div>
+        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mariadb/" rel="tag">mariadb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/micronaut/" rel="tag">micronaut</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/websocket/" rel="tag">websocket</a></li></ul>
+
+      </header>
+      <div class="e-content article-entry" itemprop="articleBody">
+        
+          <h3 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h3><p>This is part 2 of the “Realtime Data with Mariadb” Series, if you haven’t got the chance to read <a target="_blank" rel="noopener" href="https://www.naufals.com/2024/05/12/mariadb-with-realtime-data/">part 1</a> I highly recommend to read it first.</p>
+<h3 id="Websocket"><a href="#Websocket" class="headerlink" title="Websocket"></a>Websocket</h3><p>Now that we’ve successfully listened to database changes, we want to streamline it with WebSocket.</p>
+<p>In this example I am using Micronaut’s websocket feature, you are obviously free to choose any framework or even implement it yourself.</p>
+<p>As usual all the code in this article will be available <a target="_blank" rel="noopener" href="https://github.com/nooballday/realtimedatastore">here</a></p>
+<h3 id="Project-Setup"><a href="#Project-Setup" class="headerlink" title="Project Setup"></a>Project Setup</h3><p>Let’s start by creating a micronaut project.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mn create-app realtimemariadb --features=yaml &amp;&amp; <span class="built_in">cd</span> realtimemariadb</span><br></pre></td></tr></table></figure>
+
+<p>We are going to introduce new dependencies, add these lines to your <code>build.gradle</code></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> implementation (<span class="string">&quot;org.mariadb.jdbc:mariadb-java-client:3.0.3&quot;</span>) <span class="comment">// MariaDB JDBC driver</span></span><br><span class="line"> implementation (<span class="string">&quot;org.springframework.boot:spring-boot-starter-jdbc:3.2.5&quot;</span>)</span><br><span class="line"> runtimeOnly(<span class="string">&quot;io.micronaut.sql:micronaut-jdbc-hikari&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>We need those dependencies to run queries to our database.</p>
+<p>The next step is modifying our <code>application.yml</code> add these lines for our database config.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">datasources:</span></span><br><span class="line">  <span class="attr">default:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">jdbc:mariadb://localhost:3306/aschema</span></span><br><span class="line">    <span class="attr">driverClassName:</span> <span class="string">org.mariadb.jdbc.Driver</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">localhost</span></span><br><span class="line">    <span class="attr">schema:</span> <span class="string">aschema</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">test</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">test</span></span><br><span class="line">    <span class="attr">dialect:</span> <span class="string">MYSQL</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Database-Listener"><a href="#Database-Listener" class="headerlink" title="Database Listener"></a>Database Listener</h3><p>In the previous part, we created our database listener in <code>Application.java</code> file, we are going to move it to a new File since we going to implement Micronaut’s <code>ApplicationEventListener</code> class. This will run our listener after Micronaut has finished starting.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> realtimemariadb;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.github.shyiko.mysql.binlog.BinaryLogClient;</span><br><span class="line"><span class="keyword">import</span> com.github.shyiko.mysql.binlog.event.Event;</span><br><span class="line"><span class="keyword">import</span> com.github.shyiko.mysql.binlog.event.EventType;</span><br><span class="line"><span class="keyword">import</span> com.github.shyiko.mysql.binlog.event.QueryEventData;</span><br><span class="line"><span class="keyword">import</span> com.github.shyiko.mysql.binlog.event.deserialization.EventDeserializer;</span><br><span class="line"><span class="keyword">import</span> io.micronaut.context.event.ApplicationEventListener;</span><br><span class="line"><span class="keyword">import</span> io.micronaut.runtime.server.event.ServerStartupEvent;</span><br><span class="line"><span class="keyword">import</span> jakarta.inject.Singleton;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.JSQLParserException;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.parser.CCJSqlParserUtil;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.statement.Statement;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.statement.delete.Delete;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.statement.insert.Insert;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.statement.update.Update;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">//this class will run after micronaut has finished starting</span></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DatabaseListener</span> <span class="keyword">implements</span> <span class="title class_">ApplicationEventListener</span>&lt;ServerStartupEvent&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> MainChannel mainChannel;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> DataRepository repository;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> DatasourceConfig datasourceConfig;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DatabaseListener</span><span class="params">(MainChannel mainChannel, DataRepository repository, DatasourceConfig datasourceConfig)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.mainChannel = mainChannel;</span><br><span class="line">        <span class="built_in">this</span>.repository = repository;</span><br><span class="line">        <span class="built_in">this</span>.datasourceConfig = datasourceConfig;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOG</span> <span class="operator">=</span> LoggerFactory.getLogger(DatabaseListener.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onApplicationEvent</span><span class="params">(ServerStartupEvent event)</span> &#123;</span><br><span class="line">        listen();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">listen</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">BinaryLogClient</span> <span class="variable">client</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BinaryLogClient</span>(</span><br><span class="line">                datasourceConfig.getHost(),</span><br><span class="line">                <span class="number">3306</span>,</span><br><span class="line">                datasourceConfig.getSchema(),</span><br><span class="line">                datasourceConfig.getUsername(),</span><br><span class="line">                datasourceConfig.getPassword());</span><br><span class="line"></span><br><span class="line">        <span class="type">EventDeserializer</span> <span class="variable">eventDeserializer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">EventDeserializer</span>();</span><br><span class="line">        eventDeserializer.setCompatibilityMode(</span><br><span class="line">                EventDeserializer.CompatibilityMode.DATE_AND_TIME_AS_LONG,</span><br><span class="line">                EventDeserializer.CompatibilityMode.CHAR_AND_BINARY_AS_BYTE_ARRAY);</span><br><span class="line">        client.setEventDeserializer(eventDeserializer);</span><br><span class="line">        client.registerEventListener(<span class="keyword">new</span> <span class="title class_">BinaryLogClient</span>.EventListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onEvent</span><span class="params">(Event event)</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (event.getHeader().getEventType() == EventType.QUERY) &#123;</span><br><span class="line">                    <span class="type">QueryEventData</span> <span class="variable">queryEventData</span> <span class="operator">=</span> event.getData();</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// parse the query from the event</span></span><br><span class="line">                    <span class="type">Statement</span> <span class="variable">statement</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        statement = CCJSqlParserUtil.parse(queryEventData.getSql());</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (JSQLParserException e) &#123;</span><br><span class="line">                        LOG.error(String.format(<span class="string">&quot;Error when parsing query event data : %s&quot;</span>, e.getMessage()));</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// get query type so we can cast statement to the appropriate class</span></span><br><span class="line">                    <span class="type">String</span> <span class="variable">queryType</span> <span class="operator">=</span> statement.getClass().getSimpleName().toUpperCase();</span><br><span class="line">                    <span class="type">String</span> <span class="variable">tableName</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">switch</span> (queryType) &#123;</span><br><span class="line">                        <span class="keyword">case</span> <span class="string">&quot;INSERT&quot;</span>:</span><br><span class="line">                            <span class="type">Insert</span> <span class="variable">insertStatement</span> <span class="operator">=</span> (Insert) statement;</span><br><span class="line">                            tableName = insertStatement.getTable().getName();</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> <span class="string">&quot;DELETE&quot;</span>:</span><br><span class="line">                            <span class="type">Delete</span> <span class="variable">deleteStatement</span> <span class="operator">=</span> (Delete) statement;</span><br><span class="line">                            tableName = deleteStatement.getTable().getName();</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> <span class="string">&quot;UPDATE&quot;</span>:</span><br><span class="line">                            <span class="type">Update</span> <span class="variable">updateStatement</span> <span class="operator">=</span> (Update) statement;</span><br><span class="line">                            tableName = updateStatement.getTable().getName();</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">default</span>:</span><br><span class="line">                            System.out.println(String.format(<span class="string">&quot;unsupported query to watch %s&quot;</span>, queryType));</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// broadcast event</span></span><br><span class="line">                    <span class="type">DataEvent</span> <span class="variable">dataEvent</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DataEvent</span>(tableName, repository.fetchData(tableName));</span><br><span class="line">                    System.out.println(String.format(<span class="string">&quot;Data changes on table %s&quot;</span>, dataEvent.getData()));</span><br><span class="line">                    mainChannel.broadcast(dataEvent);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            client.connect();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            LOG.error(e.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Websocket-Server"><a href="#Websocket-Server" class="headerlink" title="Websocket Server"></a>Websocket Server</h3><p>We are going to make a very simple WebSocket server that listens to a connection open, and any messages that come to our service.</p>
+<p><code>WebSocketServer.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> realtimemariadb;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.micronaut.websocket.WebSocketSession;</span><br><span class="line"><span class="keyword">import</span> io.micronaut.websocket.annotation.OnClose;</span><br><span class="line"><span class="keyword">import</span> io.micronaut.websocket.annotation.OnMessage;</span><br><span class="line"><span class="keyword">import</span> io.micronaut.websocket.annotation.OnOpen;</span><br><span class="line"><span class="keyword">import</span> io.micronaut.websocket.annotation.ServerWebSocket;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.Logger;</span><br><span class="line"><span class="keyword">import</span> org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@ServerWebSocket(&quot;/channel/&#123;userName&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebSocketServer</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> MainChannel mainChannel;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOG</span> <span class="operator">=</span> LoggerFactory.getLogger(WebSocketServer.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">WebSocketServer</span><span class="params">(MainChannel mainChannel)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.mainChannel = mainChannel;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@OnOpen</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onOpen</span><span class="params">(String userName, WebSocketSession session)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">msg</span> <span class="operator">=</span> String.format(<span class="string">&quot;User %s joined!&quot;</span>, userName);</span><br><span class="line">        LOG.info(msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@OnMessage</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onMessage</span><span class="params">(String userName, String tableName, WebSocketSession session)</span> &#123;</span><br><span class="line">        <span class="comment">//every message that comes will be assumed as subscription</span></span><br><span class="line">        <span class="type">Subscription</span> <span class="variable">subscription</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Subscription</span>(session, tableName);</span><br><span class="line">        LOG.info(String.format(<span class="string">&quot;User %s subscribing on table %s&quot;</span>, userName, tableName));</span><br><span class="line">        mainChannel.subscribe(subscription);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@OnClose</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClose</span><span class="params">(String userName, WebSocketSession session)</span>  &#123;</span><br><span class="line">        mainChannel.unsubscribe(session.getId());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Then we are going to implement our channel, which will broadcast the changes to subscribed clients.</p>
+<p><code>MainChannel.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> realtimemariadb;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> io.micronaut.websocket.WebSocketBroadcaster;</span><br><span class="line"><span class="keyword">import</span> jakarta.inject.Singleton;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"><span class="keyword">import</span> java.util.stream.Collectors;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Singleton</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainChannel</span> <span class="keyword">implements</span> <span class="title class_">Channel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//in-memory store that records active subscription</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, Set&lt;Subscription&gt;&gt; subscriptions = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MainChannel</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">subscribe</span><span class="params">(Subscription subscription)</span> &#123;</span><br><span class="line">        <span class="comment">//register active subscription</span></span><br><span class="line">        Set&lt;Subscription&gt; ss = subscriptions.get(subscription.getTableName());</span><br><span class="line">        <span class="keyword">if</span> (ss != <span class="literal">null</span>) &#123;</span><br><span class="line">            ss.add(subscription);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//<span class="doctag">TODO:</span> need to check if table exists</span></span><br><span class="line">            subscriptions.put(subscription.getTableName(), Set.of(subscription));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//it only handles tableName for now</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">broadcast</span><span class="params">(DataEvent dataEvent)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (dataEvent == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//broadcast changes to subscribed users</span></span><br><span class="line">        Set&lt;Subscription&gt; subscribed = subscriptions.get(dataEvent.getTableName());</span><br><span class="line">        <span class="keyword">if</span> (subscribed != <span class="literal">null</span>) &#123;</span><br><span class="line">            subscribed.forEach(s -&gt; &#123;</span><br><span class="line">                <span class="comment">//send to each client</span></span><br><span class="line">                s.getWebsocketSession().sendSync(dataEvent);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">unsubscribe</span><span class="params">(String sessionId)</span> &#123;</span><br><span class="line">        <span class="comment">//when the user disconnects, delete all entries from subscription</span></span><br><span class="line">        subscriptions.forEach((key, value) -&gt; &#123;</span><br><span class="line">            <span class="comment">//remove session from subscription</span></span><br><span class="line">            Set&lt;Subscription&gt; mValue = value.stream().filter( v -&gt; v.getSessionId() != sessionId).collect(Collectors.toSet());</span><br><span class="line">            subscriptions.put(key, mValue);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Now try to run the code with</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./gradlew :run</span><br></pre></td></tr></table></figure>
+
+<p>If everything is correct, you will see these messages</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; Task :run</span><br><span class="line"> __  __ _                                  _</span><br><span class="line">|  \/  (_) ___ _ __ ___  _ __   __ _ _   _| |_</span><br><span class="line">| |\/| | |/ __| <span class="string">&#x27;__/ _ \| &#x27;</span>_ \ / _` | | | | __|</span><br><span class="line">| |  | | | (__| | | (_) | | | | (_| | |_| | |_</span><br><span class="line">|_|  |_|_|\___|_|  \___/|_| |_|\__,_|\__,_|\__|</span><br><span class="line">14:54:44.097 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...</span><br><span class="line">14:54:44.163 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.mariadb.jdbc.Connection@20a14b55</span><br><span class="line">14:54:44.165 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.</span><br><span class="line">May 17, 2024 2:54:44 PM com.github.shyiko.mysql.binlog.BinaryLogClient connect</span><br><span class="line">INFO: Connected to localhost:3306 at mylog-bin.000004/342 (sid:65535, cid:43)</span><br><span class="line">&lt;==========---&gt; 80% EXECUTING [10s]</span><br><span class="line">&gt; :run</span><br></pre></td></tr></table></figure>
+
+<h3 id="The-client"><a href="#The-client" class="headerlink" title="The client"></a>The client</h3><p>Let’s build a simple websocket client in node.js.</p>
+<p>In the example below I am subscribing to the user table.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># create a node project and add &#x27;ws&#x27; dependency</span></span><br><span class="line">yarn init -y &amp;&amp; yarn add ws</span><br></pre></td></tr></table></figure>
+
+<p><code>index.js</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">WebSocket</span> = <span class="built_in">require</span>(<span class="string">&#x27;ws&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ws = <span class="keyword">new</span> <span class="title class_">WebSocket</span>(<span class="string">&#x27;ws://localhost:8080/channel/UserNode&#x27;</span>);</span><br><span class="line"></span><br><span class="line">ws.<span class="title function_">on</span>(<span class="string">&#x27;open&#x27;</span>, <span class="keyword">function</span> <span class="title function_">open</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Connected to server&#x27;</span>);</span><br><span class="line">  ws.<span class="title function_">send</span>(<span class="string">&#x27;user&#x27;</span>);<span class="comment">//subscribe to user `table`</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">ws.<span class="title function_">on</span>(<span class="string">&#x27;message&#x27;</span>, <span class="keyword">function</span> <span class="title function_">incoming</span>(<span class="params">data</span>) &#123;</span><br><span class="line">  <span class="comment">//incoming data changes</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">table</span>(<span class="title class_">JSON</span>.<span class="title function_">parse</span>(data.<span class="title function_">toString</span>(<span class="string">&quot;utf-8&quot;</span>)).<span class="property">data</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">ws.<span class="title function_">on</span>(<span class="string">&#x27;close&#x27;</span>, <span class="keyword">function</span> <span class="title function_">close</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Disconnected from server&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Start the node project</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node index.js</span><br></pre></td></tr></table></figure>
+
+<p>If the client is connected to our WebSocket server, you will see this message</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">15:00:47.585 [default-nioEventLoopGroup-1-2] INFO  realtimemariadb.WebSocketServer - User UserNode joined!</span><br><span class="line">15:00:47.600 [default-nioEventLoopGroup-1-2] INFO  realtimemariadb.WebSocketServer - User UserNode subscribing on table user</span><br></pre></td></tr></table></figure>
+
+<p>Now try modifying your database.</p>
+<p><img src="/images/example-realtime.gif" alt="realtime-data"></p>
+<p>Congrats, now you’ve built a realtime database service.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/nooballday/realtimedatastore">Source code</a></p>
+
+        
+      </div>
+
+         
+    </div>
+    
+     
+  </div>
+  
+    
+<nav id="article-nav">
+  <a class="article-nav-btn left  disabled "
+     >
+    <i class="fa-solid fa-angle-left"></i>
+    <p class="title-text">
+        
+    </p>
+  </a>
+  <a class="article-nav-btn right "
+    
+      href="/2024/05/12/mariadb-with-realtime-data/"
+      title="Realtime Data with MariaDB and Websocket [Part 1]"
+     >
+
+    <p class="title-text">
+      
+        Realtime Data with MariaDB and Websocket [Part 1]
+        
+    </p>
+    <i class="fa-solid fa-angle-right"></i>
+  </a>
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+    </div>
+    <div id="footer-wrapper">
+      <footer id="footer">
+  
+  <div id="footer-info" class="inner">
+    
+    &copy; 2024 Achmad Naufal<br>
+    Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/saicaca/hexo-theme-vivia">Theme</a>
+  </div>
+</footer>
+
+    </div>
+    <div class="back-to-top-wrapper">
+    <button id="back-to-top-btn" class="back-to-top-btn hide" onclick="topFunction()">
+        <i class="fa-solid fa-angle-up"></i>
+    </button>
+</div>
+
+<script>
+    function topFunction() {
+        window.scroll({ top: 0, behavior: 'smooth' });
+    }
+    let btn = document.getElementById('back-to-top-btn');
+    function scrollFunction() {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
+            btn.classList.remove('hide')
+        } else {
+            btn.classList.add('hide')
+        }
+    }
+    window.onscroll = function() {
+        scrollFunction();
+    }
+</script>
+
+  </div>
+  <script src="/js/light-dark-switch.js"></script>
+</body>
+</html>

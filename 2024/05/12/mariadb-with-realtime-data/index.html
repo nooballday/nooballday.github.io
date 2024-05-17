@@ -28,7 +28,7 @@
 <meta property="og:description" content="GoalWe are going to learn and build a service that serves real-time data with MariaDB as the underlying database. Why?User expectations are increasing, and real-time data has become mandatory for a gr">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-05-12T12:58:47.000Z">
-<meta property="article:modified_time" content="2024-05-12T14:43:16.078Z">
+<meta property="article:modified_time" content="2024-05-17T07:18:26.428Z">
 <meta property="article:author" content="Achmad Naufal Syafiq">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="mariadb">
@@ -146,7 +146,7 @@
   <div class="widget-wrap">
     <div class="widget">
       <h3 class="widget-title">Tags</h3>
-      <ul class="widget-tag-list" itemprop="keywords"><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/authenticator/" rel="tag">authenticator</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/context/" rel="tag">context</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/database/" rel="tag">database</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/html/" rel="tag">html</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/idempotency/" rel="tag">idempotency</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/mariadb/" rel="tag">mariadb</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/micronaut/" rel="tag">micronaut</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/mqtt/" rel="tag">mqtt</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/nodejs/" rel="tag">nodejs</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/realtime/" rel="tag">realtime</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/rust/" rel="tag">rust</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/totp/" rel="tag">totp</a></li></ul>
+      <ul class="widget-tag-list" itemprop="keywords"><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/authenticator/" rel="tag">authenticator</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/context/" rel="tag">context</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/database/" rel="tag">database</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/html/" rel="tag">html</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/idempotency/" rel="tag">idempotency</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/mariadb/" rel="tag">mariadb</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/micronaut/" rel="tag">micronaut</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/mqtt/" rel="tag">mqtt</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/nodejs/" rel="tag">nodejs</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/realtime/" rel="tag">realtime</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/rust/" rel="tag">rust</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/totp/" rel="tag">totp</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/websocket/" rel="tag">websocket</a></li></ul>
     </div>
   </div>
 
@@ -207,7 +207,7 @@
 <li>java17</li>
 <li>mariadb</li>
 </ul>
-<h3 id="How"><a href="#How" class="headerlink" title="How?"></a>How?</h3><p>There are multiple options to build real-time data, one of them is polling the table that users registered to, for example, if a user subscribes to column <code>user_profile</code> there will be a service that regularly queries into the table and check if the table has been modified.</p>
+<h3 id="How"><a href="#How" class="headerlink" title="How?"></a>How?</h3><p>There are multiple options to build real-time data, one of them is polling the table that users registered to, for example, if a user subscribes to table <code>user_profile</code> there will be a service that regularly queries into that table and check if the table has been modified.</p>
 <p>It’s not the most efficient method, but it will get the job done.</p>
 <p>Another alternative is by monitoring a <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/binary-log.html">binlog file</a> (binary log) file.</p>
 <blockquote>
@@ -225,7 +225,7 @@
 <p>When the database starts there should be a file in your data directory called <code>your_logfile_name-bin.000001</code></p>
 <h3 id="Part-1-The-Service"><a href="#Part-1-The-Service" class="headerlink" title="Part 1, The Service"></a>Part 1, The Service</h3><p>In this part, we are going to learn how to build a service that listens to the changes in the database and parses it.</p>
 <blockquote>
-<p>You can get the full code in this <a target="_blank" rel="noopener" href="https://github.com/nooballday?tab=repositories">repo</a></p>
+<p>You can get the full code in this <a target="_blank" rel="noopener" href="https://github.com/nooballday/realtimedatastore">repo</a></p>
 </blockquote>
 <p>First thing first, we are going to start our project, in this example, I am going to start a micronaut project because later we are going to use its web socket feature to streamline the data.</p>
 <p>But you can use a simple gradle project or event you can build the project from scratch.</p>
@@ -253,10 +253,15 @@
   
     
 <nav id="article-nav">
-  <a class="article-nav-btn left  disabled "
+  <a class="article-nav-btn left "
+    
+      href="/2024/05/17/realtime-data-with-mariadb-2/"
+      title="Realtime Data with MariaDB and Websocket [Part 2]"
      >
     <i class="fa-solid fa-angle-left"></i>
     <p class="title-text">
+      
+        Realtime Data with MariaDB and Websocket [Part 2]
         
     </p>
   </a>
