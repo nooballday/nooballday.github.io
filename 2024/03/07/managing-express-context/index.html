@@ -1,206 +1,160 @@
-<!DOCTYPE html>
-
-
-<html theme="dark" showBanner="true" hasBanner="false" > 
-<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet">
-<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet">
-<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet">
-<script src="/js/color.global.min.js" ></script>
-<script src="/js/load-settings.js" ></script>
-<head>
-  <meta charset="utf-8">
-  
-  
-  
-
-  
-  <title>Managing Context in Express Application | Dev Experience</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <link rel="preload" href="/css/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
-  <link rel="preload" href="/css/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
-
-  <meta name="description" content="Pre-requisite NodeJs  Why?When creating a Web API, there is a need to manage a client’s context so that when it’s required in a function, the function gets the correct context and processes the data.">
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Managing Context in Express Application | Dev Journey</title><meta name="author" content="Achmad Naufal"><meta name="copyright" content="Achmad Naufal"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Pre-requisite NodeJs  Why?When creating a Web API, there is a need to manage a client’s context so that when it’s required in a function, the function gets the correct context and processes the data.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Managing Context in Express Application">
 <meta property="og:url" content="http://example.com/2024/03/07/managing-express-context/index.html">
-<meta property="og:site_name" content="Dev Experience">
+<meta property="og:site_name" content="Dev Journey">
 <meta property="og:description" content="Pre-requisite NodeJs  Why?When creating a Web API, there is a need to manage a client’s context so that when it’s required in a function, the function gets the correct context and processes the data.">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/context_bg.jpeg">
 <meta property="article:published_time" content="2024-03-07T06:48:38.000Z">
-<meta property="article:modified_time" content="2024-03-29T00:01:17.495Z">
-<meta property="article:author" content="Achmad Naufal Syafiq">
+<meta property="article:modified_time" content="2024-08-14T15:51:51.491Z">
+<meta property="article:author" content="Achmad Naufal">
 <meta property="article:tag" content="nodejs">
 <meta property="article:tag" content="context">
 <meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Dev Experience" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/images/favicon.png">
-  
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-<meta name="generator" content="Hexo 7.1.1"></head>
-
-<body>
-  
-   
-  <div id="main-grid" class="  ">
-    <div id="nav" class=""  >
-      <navbar id="navbar">
-  <nav id="title-nav">
-    <a href="/">
-      <div id="vivia-logo">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-      <div>Dev Experience </div>
-    </a>
-  </nav>
-  <nav id="main-nav">
-    
-      <a class="main-nav-link" href="/">Home</a>
-    
-      <a class="main-nav-link" href="/archives">Archives</a>
-    
-  </nav>
-  <nav id="sub-nav">
-    <a id="theme-btn" class="nav-icon">
-      <span class="light-mode-icon"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M438.5-829.913v-48q0-17.452 11.963-29.476 11.964-12.024 29.326-12.024 17.363 0 29.537 12.024t12.174 29.476v48q0 17.452-11.963 29.476-11.964 12.024-29.326 12.024-17.363 0-29.537-12.024T438.5-829.913Zm0 747.826v-48q0-17.452 11.963-29.476 11.964-12.024 29.326-12.024 17.363 0 29.537 12.024t12.174 29.476v48q0 17.452-11.963 29.476-11.964 12.024-29.326 12.024-17.363 0-29.537-12.024T438.5-82.087ZM877.913-438.5h-48q-17.452 0-29.476-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537t29.476-12.174h48q17.452 0 29.476 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T877.913-438.5Zm-747.826 0h-48q-17.452 0-29.476-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537T82.087-521.5h48q17.452 0 29.476 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T130.087-438.5Zm660.174-290.87-34.239 32q-12.913 12.674-29.565 12.174-16.653-.5-29.327-13.174-12.674-12.673-12.554-28.826.12-16.152 12.794-28.826l33-35q12.913-12.674 30.454-12.674t30.163 12.847q12.709 12.846 12.328 30.826-.38 17.98-13.054 30.653ZM262.63-203.978l-32 34q-12.913 12.674-30.454 12.674t-30.163-12.847q-12.709-12.846-12.328-30.826.38-17.98 13.054-30.653l33.239-31q12.913-12.674 29.565-12.174 16.653.5 29.327 13.174 12.674 12.673 12.554 28.826-.12 16.152-12.794 28.826Zm466.74 33.239-32-33.239q-12.674-12.913-12.174-29.565.5-16.653 13.174-29.327 12.673-12.674 28.826-13.054 16.152-.38 28.826 12.294l35 33q12.674 12.913 12.674 30.454t-12.847 30.163q-12.846 12.709-30.826 12.328-17.98-.38-30.653-13.054ZM203.978-697.37l-34-33q-12.674-12.913-13.174-29.945-.5-17.033 12.174-29.707t31.326-13.293q18.653-.62 31.326 13.054l32 34.239q11.674 12.913 11.174 29.565-.5 16.653-13.174 29.327-12.673 12.674-28.826 12.554-16.152-.12-28.826-12.794ZM480-240q-100 0-170-70t-70-170q0-100 70-170t170-70q100 0 170 70t70 170q0 100-70 170t-170 70Zm-.247-82q65.703 0 111.475-46.272Q637-414.544 637-480.247t-45.525-111.228Q545.95-637 480.247-637t-111.475 45.525Q323-545.95 323-480.247t45.525 111.975Q414.05-322 479.753-322ZM481-481Z"/></svg></span>
-      <span class="dark-mode-icon"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480.239-116.413q-152.63 0-258.228-105.478Q116.413-327.37 116.413-480q0-130.935 77.739-227.435t206.304-125.043q43.022-9.631 63.87 10.869t3.478 62.805q-8.891 22.043-14.315 44.463-5.424 22.42-5.424 46.689 0 91.694 64.326 155.879 64.325 64.186 156.218 64.186 24.369 0 46.978-4.946 22.609-4.945 44.413-14.076 42.826-17.369 62.967 1.142 20.142 18.511 10.511 61.054Q807.174-280 712.63-198.206q-94.543 81.793-232.391 81.793Zm0-95q79.783 0 143.337-40.217 63.554-40.218 95.793-108.283-15.608 4.044-31.097 5.326-15.49 1.283-31.859.805-123.706-4.066-210.777-90.539-87.071-86.473-91.614-212.092-.24-16.369.923-31.978 1.164-15.609 5.446-30.978-67.826 32.478-108.282 96.152Q211.652-559.543 211.652-480q0 111.929 78.329 190.258 78.329 78.329 190.258 78.329ZM466.13-465.891Z"/></svg></span>
-    </a>
-    
-      <a id="nav-rss-link" class="nav-icon mobile-hide" href="/atom.xml" title="RSS Feed">
-        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M198-120q-25.846 0-44.23-18.384-18.384-18.385-18.384-44.23 0-25.846 18.384-44.23 18.384-18.385 44.23-18.385 25.846 0 44.23 18.385 18.384 18.384 18.384 44.23 0 25.845-18.384 44.23Q223.846-120 198-120Zm538.385 0q-18.846 0-32.923-13.769-14.076-13.769-15.922-33.23-8.692-100.616-51.077-188.654-42.385-88.039-109.885-155.539-67.5-67.501-155.539-109.885Q283-663.462 182.385-672.154q-19.461-1.846-33.23-16.23-13.769-14.385-13.769-33.846t14.076-32.922q14.077-13.461 32.923-12.23 120.076 8.692 226.038 58.768 105.961 50.077 185.73 129.846 79.769 79.769 129.846 185.731 50.077 105.961 58.769 226.038 1.231 18.846-12.538 32.922Q756.461-120 736.385-120Zm-252 0q-18.231 0-32.423-13.461t-18.653-33.538Q418.155-264.23 348.886-333.5q-69.27-69.27-166.501-84.423-20.077-4.462-33.538-18.961-13.461-14.5-13.461-33.346 0-19.076 13.884-33.23 13.884-14.153 33.115-10.922 136.769 15.384 234.384 112.999 97.615 97.615 112.999 234.384 3.231 19.23-10.538 33.115Q505.461-120 484.385-120Z"/></svg>
-      </a>
-    
-    <div id="nav-menu-btn" class="nav-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M177.37-252.282q-17.453 0-29.477-11.964-12.024-11.963-12.024-29.326t12.024-29.537q12.024-12.174 29.477-12.174h605.26q17.453 0 29.477 11.964 12.024 11.963 12.024 29.326t-12.024 29.537q-12.024 12.174-29.477 12.174H177.37Zm0-186.218q-17.453 0-29.477-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537T177.37-521.5h605.26q17.453 0 29.477 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T782.63-438.5H177.37Zm0-186.217q-17.453 0-29.477-11.964-12.024-11.963-12.024-29.326t12.024-29.537q12.024-12.174 29.477-12.174h605.26q17.453 0 29.477 11.964 12.024 11.963 12.024 29.326t-12.024 29.537q-12.024 12.174-29.477 12.174H177.37Z"/></svg>
-    </div>
-  </nav>
-</navbar>
-<div id="nav-dropdown" class="hidden">
-  <div id="dropdown-link-list">
-    
-      <a class="nav-dropdown-link" href="/">Home</a>
-    
-      <a class="nav-dropdown-link" href="/archives">Archives</a>
-    
-    
-      <a class="nav-dropdown-link" href="/atom.xml" title="RSS Feed">RSS</a>
-     
-    </div>
-</div>
-<script>
-  let dropdownBtn = document.getElementById("nav-menu-btn");
-  let dropdownEle = document.getElementById("nav-dropdown");
-  dropdownBtn.onclick = function() {
-    dropdownEle.classList.toggle("hidden");
-  }
-</script>
-    </div>
-    <div id="sidebar-wrapper">
-      <sidebar id="sidebar">
-  
-    <div class="widget-wrap">
-  <div class="info-card">
-    <div class="avatar">
+<meta name="twitter:image" content="http://example.com/images/context_bg.jpeg"><link rel="shortcut icon" href="/images/favicon.png"><link rel="canonical" href="http://example.com/2024/03/07/managing-express-context/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Managing Context in Express Application',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-14 22:51:51'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
       
-        <image src=/images/profile-picture.jpg></image>
+        get: key => {
+          const itemStr = localStorage.getItem(key)
       
-      <div class="img-dim"></div>
-    </div>
-    <div class="info">
-      <div class="username">Achmad Naufal </div>
-      <div class="dot"></div>
-      <div class="subtitle">Find me here </div>
-      <div class="link-list">
-        
-          <a class="link-btn" target="_blank" rel="noopener" href="https://www.linkedin.com/in/naufal3dev/" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-        
-          <a class="link-btn" target="_blank" rel="noopener" href="https://steamcommunity.com/profiles/76561199242373857/" title="Steam"><i class="fa-brands fa-steam"></i></a>
-        
-          <a class="link-btn" target="_blank" rel="noopener" href="https://github.com/nooballday" title="GitHub"><i class="fa-brands fa-github"></i></a>
-        
-          <a class="link-btn" href="mailto:naufal3dev@gmail.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
-         
-      </div>  
-    </div>
-  </div>
-</div>
-
-  
-  <div class="sticky">
-    
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
       
-
-
-
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
     
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
       
-  <div class="widget-wrap">
-    <div class="widget">
-      <h3 class="widget-title">Tags</h3>
-      <ul class="widget-tag-list" itemprop="keywords"><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/authenticator/" rel="tag">authenticator</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/context/" rel="tag">context</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/database/" rel="tag">database</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/html/" rel="tag">html</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/idempotency/" rel="tag">idempotency</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/java/" rel="tag">java</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/mariadb/" rel="tag">mariadb</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/micronaut/" rel="tag">micronaut</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/mqtt/" rel="tag">mqtt</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/nodejs/" rel="tag">nodejs</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/realtime/" rel="tag">realtime</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/rust/" rel="tag">rust</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/totp/" rel="tag">totp</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/websocket/" rel="tag">websocket</a></li></ul>
-    </div>
-  </div>
-
-
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
     
-  </div>
-</sidebar>
-    </div>
-    <div id="content-body">
-       
-
-
-<article id="post-managing-express-context" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-    
-   
-  <div class="article-inner">
-    <div class="article-main">
-      <header class="article-header">
-        
-<div class="main-title-bar">
-  <div class="main-title-dot"></div>
-  
-    
-      <h1 class="p-name article-title" itemprop="headline name">
-        Managing Context in Express Application
-      </h1>
-    
-  
-</div>
-
-        <div class='meta-info-bar'>
-          <div class="meta-info">
-  <time class="dt-published" datetime="2024-03-07T06:48:38.000Z" itemprop="datePublished">2024-03-07</time>
-</div>
-          <div class="need-seperator meta-info">
-            <div class="meta-cate-flex">
-  
-    Uncategorized 
-   
-</div>
-  
-          </div>
-          <div class="wordcount need-seperator meta-info">
-            2.9k words 
-          </div>
-        </div>
-        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/context/" rel="tag">context</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nodejs/" rel="tag">nodejs</a></li></ul>
-
-      </header>
-      <div class="e-content article-entry" itemprop="articleBody">
-        
-          <h3 id="Pre-requisite"><a href="#Pre-requisite" class="headerlink" title="Pre-requisite"></a>Pre-requisite</h3><ul>
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.1.1"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/profile-picture.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url('/images/context_bg.jpeg')"><nav id="nav"><span id="blog-info"><a href="/" title="Dev Journey"><span class="site-name">Dev Journey</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Managing Context in Express Application</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-03-07T06:48:38.000Z" title="Created 2024-03-07 13:48:38">2024-03-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-08-14T15:51:51.491Z" title="Updated 2024-08-14 22:51:51">2024-08-14</time></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="Pre-requisite"><a href="#Pre-requisite" class="headerlink" title="Pre-requisite"></a>Pre-requisite</h3><ul>
 <li>NodeJs</li>
 </ul>
 <h3 id="Why"><a href="#Why" class="headerlink" title="Why?"></a>Why?</h3><p>When creating a Web API, there is a need to manage a client’s context so that when it’s required in a function, the function gets the correct context and processes the data.</p>
@@ -227,90 +181,4 @@
 <p>There are going to be tradeoffs, one of which is testing, now you need to mock&#x2F;stub the namespace call if you are running a unit test.</p>
 <h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>When you are building a complex application, you need to make a trade-off on how to manage your code, if you pass every variable that’s needed down in the function call even though your function might not need it your code will be harder to read, on the other hand, if you use context-based session like the one we did above, you will need extra effort on the test.</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/nooballday/express-context-storage">View code on github</a></p>
-
-        
-      </div>
-
-         
-    </div>
-    
-     
-  </div>
-  
-    
-<nav id="article-nav">
-  <a class="article-nav-btn left "
-    
-      href="/2024/03/09/totp-web-service-part-one/"
-      title="Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server"
-     >
-    <i class="fa-solid fa-angle-left"></i>
-    <p class="title-text">
-      
-        Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server
-        
-    </p>
-  </a>
-  <a class="article-nav-btn right "
-    
-      href="/2024/03/06/Mqqt-with-RUST-and-NodeJs/"
-      title="MQTT with RUST and NodeJs"
-     >
-
-    <p class="title-text">
-      
-        MQTT with RUST and NodeJs
-        
-    </p>
-    <i class="fa-solid fa-angle-right"></i>
-  </a>
-</nav>
-
-
-  
-</article>
-
-
-
-
-
-
-    </div>
-    <div id="footer-wrapper">
-      <footer id="footer">
-  
-  <div id="footer-info" class="inner">
-    
-    &copy; 2024 Achmad Naufal<br>
-    Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a target="_blank" rel="noopener" href="https://github.com/saicaca/hexo-theme-vivia">Theme</a>
-  </div>
-</footer>
-
-    </div>
-    <div class="back-to-top-wrapper">
-    <button id="back-to-top-btn" class="back-to-top-btn hide" onclick="topFunction()">
-        <i class="fa-solid fa-angle-up"></i>
-    </button>
-</div>
-
-<script>
-    function topFunction() {
-        window.scroll({ top: 0, behavior: 'smooth' });
-    }
-    let btn = document.getElementById('back-to-top-btn');
-    function scrollFunction() {
-        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
-            btn.classList.remove('hide')
-        } else {
-            btn.classList.add('hide')
-        }
-    }
-    window.onscroll = function() {
-        scrollFunction();
-    }
-</script>
-
-  </div>
-  <script src="/js/light-dark-switch.js"></script>
-</body>
-</html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">Achmad Naufal</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/03/07/managing-express-context/">http://example.com/2024/03/07/managing-express-context/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/nodejs/">nodejs</a><a class="post-meta__tags" href="/tags/context/">context</a></div><div class="post_share"><div class="social-share" data-image="/images/context_bg.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/03/09/totp-web-service-part-one/" title="Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server"><img class="cover" src="/images/authentication.svg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server</div></div></a></div><div class="next-post pull-right"><a href="/2024/03/06/Mqqt-with-RUST-and-NodeJs/" title="MQTT with RUST and NodeJs"><img class="cover" src="/images/iot.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">MQTT with RUST and NodeJs</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2024/03/06/Mqqt-with-RUST-and-NodeJs/" title="MQTT with RUST and NodeJs"><img class="cover" src="/images/iot.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-06</div><div class="title">MQTT with RUST and NodeJs</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/profile-picture.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Achmad Naufal</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/nooballday"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:naufal3dev@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #24292e;"></i></a><a class="social-icon" href="https://www.linkedin.com/in/naufal3dev" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin" style="color: #24292e;"></i></a><a class="social-icon" href="https://steamcommunity.com/profiles/76561199242373857" target="_blank" title="Steam"><i class="fa-brands fa-steam" style="color: #24292e;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Feel free to contact me for ideas / discussions</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Pre-requisite"><span class="toc-number">1.</span> <span class="toc-text">Pre-requisite</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Why"><span class="toc-number">2.</span> <span class="toc-text">Why?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Conclusion"><span class="toc-number">3.</span> <span class="toc-text">Conclusion</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/05/17/realtime-data-with-mariadb-2/" title="Realtime Data with MariaDB and Websocket [Part 2]"><img src="/images/realtime_db.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Realtime Data with MariaDB and Websocket [Part 2]"/></a><div class="content"><a class="title" href="/2024/05/17/realtime-data-with-mariadb-2/" title="Realtime Data with MariaDB and Websocket [Part 2]">Realtime Data with MariaDB and Websocket [Part 2]</a><time datetime="2024-05-17T06:59:50.000Z" title="Created 2024-05-17 13:59:50">2024-05-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/12/mariadb-with-realtime-data/" title="Realtime Data with MariaDB and Websocket [Part 1]"><img src="/images/realtime_bg_1.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Realtime Data with MariaDB and Websocket [Part 1]"/></a><div class="content"><a class="title" href="/2024/05/12/mariadb-with-realtime-data/" title="Realtime Data with MariaDB and Websocket [Part 1]">Realtime Data with MariaDB and Websocket [Part 1]</a><time datetime="2024-05-12T12:58:47.000Z" title="Created 2024-05-12 19:58:47">2024-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/07/idempotency-prevent-duplicate-request/" title="How to Prevent Duplicate Data with Idempotency Key"><img src="/images/duplicate_key_1.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="How to Prevent Duplicate Data with Idempotency Key"/></a><div class="content"><a class="title" href="/2024/04/07/idempotency-prevent-duplicate-request/" title="How to Prevent Duplicate Data with Idempotency Key">How to Prevent Duplicate Data with Idempotency Key</a><time datetime="2024-04-07T03:08:57.000Z" title="Created 2024-04-07 10:08:57">2024-04-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/10/totp-web-service-part-two-client/" title="Building Authentication Service with TOTP (Time-Based OTP) Part 2. The Client"><img src="/images/authentication.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Building Authentication Service with TOTP (Time-Based OTP) Part 2. The Client"/></a><div class="content"><a class="title" href="/2024/03/10/totp-web-service-part-two-client/" title="Building Authentication Service with TOTP (Time-Based OTP) Part 2. The Client">Building Authentication Service with TOTP (Time-Based OTP) Part 2. The Client</a><time datetime="2024-03-10T13:42:56.000Z" title="Created 2024-03-10 20:42:56">2024-03-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/03/09/totp-web-service-part-one/" title="Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server"><img src="/images/authentication.svg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server"/></a><div class="content"><a class="title" href="/2024/03/09/totp-web-service-part-one/" title="Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server">Building Authentication Service with TOTP (Time-Based OTP) Part 1. The Server</a><time datetime="2024-03-09T14:21:06.000Z" title="Created 2024-03-09 21:21:06">2024-03-09</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By Achmad Naufal</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div></div></body></html>
